@@ -1,0 +1,46 @@
+//
+// Lovely Dashboard JavaScript Extensions
+// Please drop this file in the 'Simhub/JavascriptExtensions' folder
+//
+
+//Bias needs to be in the fomat 53 or 53.7
+var PreferredBias = "49.7%";
+
+function apr_GetSetupBias(){
+	var SetupBias = "0.0%";
+	if ($prop('GameRawData.SessionData.CarSetup.Chassis.BrakesInCar.BrakePressureBias') != null) {
+		SetupBias = $prop('GameRawData.SessionData.CarSetup.Chassis.BrakesInCar.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.Front.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.Front.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.InCarDials.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.InCarDials.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.General.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.General.BrakePressureBias');
+	}
+	return SetupBias;
+}
+
+function apr_GetBiasColor(){
+		return 'bob';
+}
+		var SetupBrakeBiasPercentage = replace(apr_GetSetupBias(), '%', '');
+		var bias = $prop('BrakeBias');
+		if (bias == SetupBrakeBiasPercentage) {
+			return 'Green';
+		}
+		else if (bias == PreferredBias) {
+			return 'DeepSkyBlue';
+		}
+		else {
+			return 'White';
+		}
+}

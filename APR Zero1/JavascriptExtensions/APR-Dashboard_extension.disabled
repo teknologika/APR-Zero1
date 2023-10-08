@@ -1,0 +1,200 @@
+//
+// Lovely Dashboard JavaScript Extensions
+// Please drop this file in the 'Simhub/JavascriptExtensions' folder
+//
+
+//Bias needs to be in the fomat 53 or 53.7
+var PreferredBias = "47";
+
+// Which delta to show .. last lap or Session best lap - "Last" or "SessonBest" or "LapRecord"
+var DeltaMode = "SessionBest";
+
+
+
+function apr_GetSetupBias(){
+	var SetupBias = "0.0%";
+	if ($prop('GameRawData.SessionData.CarSetup.Chassis.BrakesInCar.BrakePressureBias') != null) {
+		SetupBias = $prop('GameRawData.SessionData.CarSetup.Chassis.BrakesInCar.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.Front.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.Front.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.InCarDials.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.InCarDials.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.BrakesDriveUnit.BrakeSpec.BrakePressureBias');
+	}
+	else if ($prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.General.BrakePressureBias') != null){
+		SetupBias = $prop('DataCorePlugin.GameRawData.SessionData.CarSetup.Chassis.General.');
+	}
+	return SetupBias;
+}
+
+function apr_GetBiasColor(){
+		var SetupBrakeBiasPercentage = replace(apr_GetSetupBias(), '%', '');
+		var bias = $prop('BrakeBias');
+		if (bias == SetupBrakeBiasPercentage) {
+			return 'Black';
+		}
+		else if (bias == PreferredBias) {
+			return 'Yellow';
+		}
+		else {
+			return 'White';
+		}
+}
+
+function apr_GetBiasLabel(){
+		var SetupBrakeBiasPercentage = replace(apr_GetSetupBias(), '%', '');
+		var bias = $prop('BrakeBias');
+		if (bias == SetupBrakeBiasPercentage) {
+			return 'Setup';
+		}
+		else if (bias == PreferredBias) {
+			return 'Preferred';
+		}
+		else {
+			return '';
+		}
+}
+
+function apr_GetPitWindowMessage(){
+	
+	// This only works for Road and Oval courses
+	// 0 = road, 1-3 = rallycross, 4 = dirt road w/o joker laps, 5-7 = short to long ovals, 8 = dirt oval
+	if ($prop('DahlDesign.TrackType') > 0 && $prop('DahlDesign.TrackType') < 5) {
+		return "";
+	}
+
+	// If the DahlDesign Fuel alert is true, box now
+	if ($prop('DahlDesign.FuelAlert') == true) {
+		return "BOX";
+	}
+
+	// if we need to save to make a stop
+    if ( $prop('DahlDesign.FuelConserveToSaveAStop') > 0 && $prop('DahlDesign.FuelConserveToSaveAStop') < 0.15) {
+    	return "SAVE";
+    }
+
+    // if the pit window is open
+	if ($prop('DahlDesign.FuelPitWindowFirst') <= $prop('DataCorePlugin.GameData.CurrentLap') && $prop('DahlDesign.FuelDelta') < 0) {
+		return "OPEN";
+	}
+
+ 	// if we have more fuel than needed, no stops
+	if ($prop('DahlDesign.FuelPitStops')  > 0 && $prop('DahlDesign.FuelDelta') >= 0) {
+		return "NO PIT";
+    }
+
+	return "";
+}
+
+function apr_GetPitWindowBackgroundColor(){
+	
+	// This only works for Road and Oval courses
+	// 0 = road, 1-3 = rallycross, 4 = dirt road w/o joker laps, 5-7 = short to long ovals, 8 = dirt oval
+	if ($prop('DahlDesign.TrackType') > 0 && $prop('DahlDesign.TrackType') < 5) {
+		return "Transparent";
+	}
+
+	// If the DahlDesign Fuel alert is true, box now
+	if ($prop('DahlDesign.FuelAlert') == true) {
+		return "Yellow";
+	}
+
+	// if we need to save to make a stop
+    if ( $prop('DahlDesign.FuelConserveToSaveAStop') > 0 && $prop('DahlDesign.FuelConserveToSaveAStop') < 0.15) {
+    	return "Orange";
+    }
+
+    // if the pit window is open
+	if ($prop('DahlDesign.FuelPitWindowFirst') <= $prop('DataCorePlugin.GameData.CurrentLap') && $prop('DahlDesign.FuelDelta') < 0) {
+		return "LawnGreen";
+	}
+
+ 	// if we have more fuel than needed, no stops
+	if ($prop('DahlDesign.FuelPitStops')  > 0 && $prop('DahlDesign.FuelDelta') >= 0) {
+		return "Grey";
+    }
+
+    // Default Dark Grey Colour
+	return "#FF262626";
+}
+
+function apr_GetPitWindowTextColor(){
+	
+	// This only works for Road and Oval courses
+	// 0 = road, 1-3 = rallycross, 4 = dirt road w/o joker laps, 5-7 = short to long ovals, 8 = dirt oval
+	if ($prop('DahlDesign.TrackType') > 0 && $prop('DahlDesign.TrackType') < 5) {
+		return "Transparent";
+	}
+
+	// If the DahlDesign Fuel alert is true, box now
+	if ($prop('DahlDesign.FuelAlert') == true) {
+		return "Black";
+	}
+
+	// if we need to save to make a stop
+    if ( $prop('DahlDesign.FuelConserveToSaveAStop') > 0 && $prop('DahlDesign.FuelConserveToSaveAStop') < 0.15) {
+    	return "Black";
+    }
+
+    // // if the pit window is open
+	if ($prop('DahlDesign.FuelPitWindowFirst') <= $prop('DataCorePlugin.GameData.CurrentLap') && $prop('DahlDesign.FuelDelta') < 0) {
+		return "Black";
+	}
+
+ 	// if we have more fuel than needed, no stops
+	if ($prop('DahlDesign.FuelPitStops')  > 0 && $prop('DahlDesign.FuelDelta') >= 0) {
+		return "Black";
+    }
+
+    // Default Dark Grey Colour
+	return "#FF262626";
+}
+
+function apr_getDeltaChange(){
+	if (DeltaMode == "SessionBest") {
+		return $prop('DahlDesign.DeltaSessionBestChange');
+	}
+	if (DeltaMode == "LapRecord") {
+		return $prop('DahlDesign.DeltaLapRecordChange');
+	}
+	return $prop('DahlDesign.DeltaLastLapChange');
+}
+
+function apr_getDeltaValue(){
+
+	if($prop('IsInPit') == true)
+	{
+		return "PIT";
+	}
+
+	if($prop('DahlDesign.LapStatus') == 3)
+	{
+		return "OUT";
+	}
+
+	if (Math.abs($prop('DahlDesign.DeltaSessionBest')) > 100 || $prop('DahlDesign.DeltaSessionBest') == 0)
+	{
+		return "-";
+	}
+
+	if (DeltaMode == "SessionBest") {
+		return format($prop('DahlDesign.DeltaSessionBest'),'0.00',1);
+	}
+
+	if (DeltaMode == "LapRecord") {
+		return format($prop('DahlDesign.DeltaLapRecord'),'0.00',1);
+	}
+
+	return format($prop('DahlDesign.DeltaLastLap'),'0.00',1);
+}
+
+function apr_getDeltaMode() {
+	return DeltaMode;
+}
