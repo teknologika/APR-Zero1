@@ -3,6 +3,19 @@
 // Please drop this file in the 'Simhub/JavascriptExtensions' folder
 //
 
+const json_settings = readtextfile('./JavascriptExtensions/Lovely-Dashboard_settings.json')
+const settings = JSON.parse(json_settings)
+
+function ld_changed(delay, value) {
+    root['ld_time'] = Math.floor($prop('DataCorePlugin.CustomExpression.CurrentDateTime').getTime())/1000;
+    root['ld_oldstate'] = root['ld_oldstate'] == null ? value : root['ld_newstate'];
+    root['ld_newstate'] = value;
+    if (root['ld_newstate'] != root['ld_oldstate']) {
+        root['ld_triggerTime'] = root['ld_time'];
+    }
+    return root['ld_triggerTime'] == null ? false : root['ld_time'] - root['ld_triggerTime'] <= delay/1000;
+}
+
 function ld_GetPlayerName() {
     const json_settings = readtextfile('./JavascriptExtensions/Lovely-Dashboard_settings.json')
     const settings = JSON.parse(json_settings);
