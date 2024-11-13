@@ -8,4 +8,4 @@ Simhub Dashboard inspired by the lovley dash ...
 
 2. Hard link the folder containing the dash  to the SimHub directory so you can make changes and use them, while also having `git` able to see the files and their changes (example from my machine):
    
-   > mklink /J "C:\Program Files\SimHub\DashTemplates\APR Zero1" "C:\Users\bruce\Documents\GitHub\APR-Zero1\APR Zero1"
+   > mklink /J "C:\Program Files (x86)\SimHub\DashTemplates\APR Zero1" "C:\Users\bruce\Documents\GitHub\APR-Zero1\APR Zero1"
